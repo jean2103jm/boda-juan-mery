@@ -866,7 +866,7 @@
         const SHARE_URL = 'https://boda-juan-mery.surge.sh';
         let currentPresIndex = 0;
 
-        function videoUrl(file) { return BASE_URL + file; }
+        function videoUrl(file) { return BASE_URL + 'video.php?f=' + encodeURIComponent(file); }
 
         // ===== PARTICLES =====
         (function () {
@@ -898,7 +898,6 @@
                 item.className = 'grid-item';
                 item.onclick = () => openPresentation(i);
                 item.innerHTML = `
-            <video src="${videoUrl(v.file)}" muted preload="metadata"></video>
             <div class="vid-number">${i + 1}</div>
             <div class="play-overlay"><div class="play-btn-circle"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
             <div class="vid-label"><span>${v.title}</span></div>`;
