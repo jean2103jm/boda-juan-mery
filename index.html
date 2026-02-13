@@ -510,10 +510,10 @@
             position: relative
         }
 
-        .pres-video-container iframe {
+        .pres-video-container video {
             width: 100%;
             height: 100%;
-            border: none
+            background: #000
         }
 
         .pres-nav {
@@ -615,25 +615,6 @@
             background: rgba(255, 255, 255, .2)
         }
 
-        .pres-action-btn.auto {
-            background: rgba(255, 255, 255, .1);
-            color: var(--white);
-            border: 1px solid rgba(255, 255, 255, .2)
-        }
-
-        .pres-action-btn.auto.active {
-            background: var(--accent2);
-            border-color: var(--accent2)
-        }
-
-        .pres-action-btn.auto:hover {
-            background: rgba(255, 255, 255, .2)
-        }
-
-        .pres-action-btn.auto.active:hover {
-            background: #d63e86
-        }
-
         .pres-video-title {
             color: var(--white);
             font-family: 'Cormorant Garamond', serif;
@@ -641,6 +622,28 @@
             font-weight: 600;
             margin-right: auto;
             padding-left: .5rem
+        }
+
+        /* Next video indicator */
+        .next-video-toast {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, .8);
+            color: var(--white);
+            padding: .6rem 1.5rem;
+            border-radius: 50px;
+            font-size: .8rem;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity .3s ease;
+            pointer-events: none
+        }
+
+        .next-video-toast.show {
+            opacity: 1
         }
 
         .pres-thumbnails {
@@ -685,22 +688,6 @@
 
         .pres-thumb:hover {
             border-color: rgba(255, 255, 255, .5)
-        }
-
-        /* Auto-play progress bar */
-        .autoplay-bar {
-            height: 3px;
-            background: rgba(255, 255, 255, .1);
-            width: 100%;
-            position: relative;
-            overflow: hidden
-        }
-
-        .autoplay-bar .progress {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent1), var(--accent2));
-            width: 0%;
-            transition: width .1s linear
         }
 
         footer {
@@ -748,6 +735,35 @@
 
         .toast.show {
             transform: translateX(-50%) translateY(0)
+        }
+
+        /* Loading spinner for video */
+        .video-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, .8);
+            z-index: 5
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, .15);
+            border-top-color: var(--accent2);
+            border-radius: 50%;
+            animation: spin .8s linear infinite
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
         }
 
         @media(max-width:900px) {
@@ -844,22 +860,24 @@
             <span class="pres-counter" id="presCounter">1 / 32</span>
             <button class="pres-close" onclick="closePresentation()" title="Cerrar">✕</button>
         </div>
-        <div class="autoplay-bar" id="autoplayBar" style="display:none">
-            <div class="progress" id="autoplayProgress"></div>
-        </div>
         <div class="pres-main">
             <button class="pres-nav prev" id="prevBtn" onclick="navigatePresentation(-1)">❮</button>
-            <div class="pres-video-container">
-                <iframe id="presIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div class="pres-video-container" id="videoContainer">
+                <video id="presVideo" controls autoplay playsinline>
+                    Tu navegador no soporta video HTML5.
+                </video>
+                <div class="video-loading" id="videoLoading">
+                    <div class="spinner"></div>
+                </div>
+                <div class="next-video-toast" id="nextToast">⏭ Siguiente video en un momento...</div>
             </div>
             <button class="pres-nav next" id="nextBtn" onclick="navigatePresentation(1)">❯</button>
         </div>
         <div class="pres-actions">
             <span class="pres-video-title" id="presTitle">Video 1</span>
-            <button class="pres-action-btn auto" id="autoPlayBtn" onclick="toggleAutoPlay()">⏩ Auto</button>
             <a class="pres-action-btn wa" href="#" onclick="shareCurrentVideo(); return false;">📤 WhatsApp</a>
-            <a class="pres-action-btn dl" id="presDownloadBtn" href="#" target="_blank">⬇ Descargar</a>
-            <a class="pres-action-btn link" id="presOpenBtn" href="#" target="_blank">🔗 Abrir</a>
+            <a class="pres-action-btn dl" id="presDownloadBtn" href="#" target="_blank" download>⬇ Descargar</a>
+            <a class="pres-action-btn link" id="presOpenBtn" href="#" target="_blank">🔗 Abrir en Drive</a>
         </div>
         <div class="pres-thumbnails" id="presThumbnails"></div>
     </div>
@@ -868,7 +886,7 @@
 
     <script>
         // =====================================================
-        //  ALL UNIQUE VIDEOS (32 total, no duplicates)
+        //  ALL 32 UNIQUE VIDEOS
         // =====================================================
         const VIDEOS = [
             { id: "1cl7vSPPDa3qfXIeeIyAOsNMFINegU-hE", title: "Video 1" },
@@ -907,12 +925,10 @@
 
         const COUPLE = "Juan Sánchez & Mery Cortés";
         let currentPresIndex = 0;
-        let autoPlayEnabled = false;
-        let autoPlayTimer = null;
-        let autoPlayInterval = null;
-        const AUTO_PLAY_SECONDS = 20; // seconds per video in auto-play
 
         // ===== HELPERS =====
+        // Google Drive direct streaming URL (works with <video> tag for public files)
+        function driveStream(id) { return `https://drive.google.com/uc?export=download&id=${id}`; }
         function drivePreview(id) { return `https://drive.google.com/file/d/${id}/preview`; }
         function driveView(id) { return `https://drive.google.com/file/d/${id}/view`; }
 
@@ -954,6 +970,42 @@
             });
         }
 
+        // ===== VIDEO PLAYER SETUP =====
+        const video = document.getElementById('presVideo');
+        const loading = document.getElementById('videoLoading');
+        const nextToast = document.getElementById('nextToast');
+
+        // When video ends, automatically go to next
+        video.addEventListener('ended', () => {
+            if (currentPresIndex < VIDEOS.length - 1) {
+                nextToast.classList.add('show');
+                setTimeout(() => {
+                    nextToast.classList.remove('show');
+                    navigatePresentation(1);
+                }, 1500);
+            } else {
+                // Last video — loop back to first
+                nextToast.textContent = '🔄 Volviendo al inicio...';
+                nextToast.classList.add('show');
+                setTimeout(() => {
+                    nextToast.classList.remove('show');
+                    nextToast.textContent = '⏭ Siguiente video en un momento...';
+                    currentPresIndex = 0;
+                    updatePresentation();
+                }, 2000);
+            }
+        });
+
+        // Show/hide loading spinner
+        video.addEventListener('loadstart', () => { loading.style.display = 'flex'; });
+        video.addEventListener('canplay', () => { loading.style.display = 'none'; });
+        video.addEventListener('waiting', () => { loading.style.display = 'flex'; });
+        video.addEventListener('playing', () => { loading.style.display = 'none'; });
+        video.addEventListener('error', () => {
+            loading.style.display = 'none';
+            showToast('⚠️ Error al cargar. Prueba "Abrir en Drive".');
+        });
+
         // ===== PRESENTATION MODE =====
         function openPresentation(index) {
             currentPresIndex = index;
@@ -966,42 +1018,39 @@
         function closePresentation() {
             document.getElementById('presOverlay').classList.remove('active');
             document.body.style.overflow = '';
-            document.getElementById('presIframe').src = '';
-            stopAutoPlay();
+            video.pause();
+            video.removeAttribute('src');
+            video.load();
         }
 
         function navigatePresentation(dir) {
             const n = currentPresIndex + dir;
-            if (n < 0 || n >= VIDEOS.length) {
-                if (autoPlayEnabled && n >= VIDEOS.length) {
-                    currentPresIndex = 0; // loop back to start
-                    updatePresentation();
-                }
-                return;
-            }
+            if (n < 0 || n >= VIDEOS.length) return;
             currentPresIndex = n;
             updatePresentation();
         }
 
         function updatePresentation() {
             const v = VIDEOS[currentPresIndex];
-            document.getElementById('presIframe').src = drivePreview(v.id);
+
+            // Set video source to Google Drive direct stream URL
+            video.src = driveStream(v.id);
+            video.load();
+            video.play().catch(() => { }); // Auto-play (may be blocked by browser until user interaction)
+
             document.getElementById('presCounter').textContent = `${currentPresIndex + 1} / ${VIDEOS.length}`;
             document.getElementById('presTitle').textContent = v.title;
-            // Download: open in Drive view where user can download from Drive's own UI (no login required)
-            document.getElementById('presDownloadBtn').href = driveView(v.id);
+            document.getElementById('presDownloadBtn').href = driveStream(v.id);
             document.getElementById('presOpenBtn').href = driveView(v.id);
             document.getElementById('prevBtn').disabled = currentPresIndex === 0;
-            document.getElementById('nextBtn').disabled = currentPresIndex === VIDEOS.length - 1 && !autoPlayEnabled;
+            document.getElementById('nextBtn').disabled = currentPresIndex === VIDEOS.length - 1;
 
+            // Update thumbnails
             document.querySelectorAll('.pres-thumb').forEach((t, i) => {
                 t.classList.toggle('active', i === currentPresIndex);
             });
             const at = document.querySelector('.pres-thumb.active');
             if (at) at.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-
-            // Reset auto-play timer if active
-            if (autoPlayEnabled) resetAutoPlayTimer();
         }
 
         function renderThumbnails() {
@@ -1011,51 +1060,9 @@
                 const t = document.createElement('div');
                 t.className = 'pres-thumb' + (i === currentPresIndex ? ' active' : '');
                 t.textContent = i + 1;
-                t.onclick = () => { currentPresIndex = i; updatePresentation() };
+                t.onclick = () => { currentPresIndex = i; updatePresentation(); };
                 s.appendChild(t);
             });
-        }
-
-        // ===== AUTO-PLAY =====
-        function toggleAutoPlay() {
-            autoPlayEnabled = !autoPlayEnabled;
-            const btn = document.getElementById('autoPlayBtn');
-            const bar = document.getElementById('autoplayBar');
-            if (autoPlayEnabled) {
-                btn.classList.add('active');
-                btn.textContent = '⏩ Auto ✓';
-                bar.style.display = 'block';
-                resetAutoPlayTimer();
-                showToast('▶ Auto-play activado — avanza cada ' + AUTO_PLAY_SECONDS + 's');
-            } else {
-                stopAutoPlay();
-                showToast('⏸ Auto-play desactivado');
-            }
-        }
-
-        function resetAutoPlayTimer() {
-            clearInterval(autoPlayInterval);
-            clearTimeout(autoPlayTimer);
-            const progress = document.getElementById('autoplayProgress');
-            progress.style.width = '0%';
-            let elapsed = 0;
-            autoPlayInterval = setInterval(() => {
-                elapsed += 100;
-                progress.style.width = (elapsed / (AUTO_PLAY_SECONDS * 1000) * 100) + '%';
-            }, 100);
-            autoPlayTimer = setTimeout(() => {
-                navigatePresentation(1);
-            }, AUTO_PLAY_SECONDS * 1000);
-        }
-
-        function stopAutoPlay() {
-            autoPlayEnabled = false;
-            clearInterval(autoPlayInterval);
-            clearTimeout(autoPlayTimer);
-            document.getElementById('autoPlayBtn').classList.remove('active');
-            document.getElementById('autoPlayBtn').textContent = '⏩ Auto';
-            document.getElementById('autoplayBar').style.display = 'none';
-            document.getElementById('autoplayProgress').style.width = '0%';
         }
 
         // ===== SHARE =====
@@ -1076,14 +1083,13 @@
             if (e.key === 'ArrowRight') navigatePresentation(1);
             else if (e.key === 'ArrowLeft') navigatePresentation(-1);
             else if (e.key === 'Escape') closePresentation();
-            else if (e.key === ' ') { e.preventDefault(); toggleAutoPlay(); }
         });
 
         // ===== SMOOTH SCROLL =====
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', function (e) {
                 const t = document.querySelector(this.getAttribute('href'));
-                if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }) }
+                if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
             });
         });
 
