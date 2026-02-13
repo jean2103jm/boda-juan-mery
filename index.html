@@ -889,19 +889,58 @@
         function showToast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000) }
 
         // ===== RENDER GRID =====
+        const loadQueue = [];
+        let loadingCount = 0;
+        const MAX_CONCURRENT = 2;
+
+        function processQueue() {
+            while (loadingCount < MAX_CONCURRENT && loadQueue.length > 0) {
+                const item = loadQueue.shift();
+                loadingCount++;
+                const vid = document.createElement('video');
+                vid.src = videoUrl(item.file);
+                vid.muted = true;
+                vid.preload = 'metadata';
+                vid.playsInline = true;
+                vid.addEventListener('loadeddata', () => {
+                    loadingCount--;
+                    processQueue();
+                });
+                vid.addEventListener('error', () => {
+                    loadingCount--;
+                    processQueue();
+                });
+                item.el.insertBefore(vid, item.el.firstChild);
+            }
+        }
+
         function renderGrid() {
             const grid = document.getElementById('videoGrid');
             document.getElementById('catalogCount').textContent = `🎬 ${VIDEOS.length} videos`;
             grid.innerHTML = '';
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const idx = parseInt(entry.target.dataset.idx);
+                        loadQueue.push({ file: VIDEOS[idx].file, el: entry.target });
+                        processQueue();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: '200px' });
+
             VIDEOS.forEach((v, i) => {
                 const item = document.createElement('div');
                 item.className = 'grid-item';
+                item.dataset.idx = i;
                 item.onclick = () => openPresentation(i);
                 item.innerHTML = `
             <div class="vid-number">${i + 1}</div>
             <div class="play-overlay"><div class="play-btn-circle"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
             <div class="vid-label"><span>${v.title}</span></div>`;
                 grid.appendChild(item);
+                observer.observe(item);
             });
         }
 
