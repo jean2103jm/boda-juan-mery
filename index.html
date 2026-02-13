@@ -515,9 +515,9 @@
         }
 
         .pres-video-container {
-            width: 100%;
-            max-width: 950px;
-            aspect-ratio: 16/9;
+            height: 100%;
+            max-height: calc(100vh - 200px);
+            aspect-ratio: 9/16;
             background: #000;
             border-radius: 10px;
             overflow: hidden;
@@ -1003,14 +1003,16 @@
         }
 
         // ===== SHARE =====
+        const SHARE_URL = 'https://boda-juan-mery.surge.sh';
+
         function shareCurrentVideo() {
             const v = VIDEOS[currentPresIndex];
-            const text = `💍 *Boda de ${COUPLE}*\n\n🎥 ${v.title}\n\n¡Mira este hermoso momento!\n\n▶ ${driveView(v.id)}\n\n📲 Todos los videos:\n🔗 ${window.location.href}`;
+            const text = `💍 *Boda de ${COUPLE}*\n\n🎥 ${v.title}\n\n¡Mira este hermoso momento!\n\n▶ ${driveView(v.id)}\n\n📲 Todos los videos:\n🔗 ${SHARE_URL}`;
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
         function shareAll() {
-            const text = `💍✨ *Boda de ${COUPLE}* ✨💍\n\n¡Te invitamos a ver los videos de nuestra boda!\n🎥 ${VIDEOS.length} videos disponibles\n\n📲 Verlos y descargarlos aquí:\n🔗 ${window.location.href}`;
+            const text = `💍✨ *Boda de ${COUPLE}* ✨💍\n\n¡Te invitamos a ver los videos de nuestra boda!\n🎥 ${VIDEOS.length} videos disponibles\n\n📲 Verlos y descargarlos aquí:\n🔗 ${SHARE_URL}`;
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
