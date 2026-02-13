@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💍 Boda de Juan Sánchez & Mery Cortés</title>
-    <meta name="description" content="Catálogo de videos del matrimonio de Juan Sánchez y Mery Cortés.">
+    <meta name="description" content="Videos del matrimonio de Juan Sánchez y Mery Cortés.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -24,15 +24,13 @@
             --gold: #C9A84C;
             --gold-light: #E8D48B;
             --gold-dark: #A68A3E;
-            --blush: #F5E6E0;
             --cream: #FDF8F4;
             --dark: #1a1a2e;
             --accent1: #8B5CF6;
             --accent2: #EC4899;
             --text: #3D2B1F;
             --text-light: #7A6055;
-            --white: #FFFFFF;
-            --rose: #D4A0A0
+            --white: #FFFFFF
         }
 
         body {
@@ -325,7 +323,7 @@
 
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 5px
         }
 
@@ -335,7 +333,7 @@
             border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
-            background: linear-gradient(135deg, #2d1b69, #1a1a2e);
+            background: #1a1a2e;
             transition: all .3s ease
         }
 
@@ -345,14 +343,13 @@
             z-index: 2
         }
 
-        .grid-item iframe {
+        .grid-item video {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
-            pointer-events: none
+            object-fit: cover
         }
 
         .grid-item .play-overlay {
@@ -451,7 +448,7 @@
         .pres-topbar {
             display: flex;
             align-items: center;
-            padding: .7rem 1.2rem;
+            padding: .5rem 1rem;
             background: rgba(255, 255, 255, .05);
             border-bottom: 1px solid rgba(255, 255, 255, .08);
             gap: .8rem;
@@ -489,21 +486,6 @@
             background: rgba(255, 255, 255, .2)
         }
 
-        /* Auto-advance progress bar */
-        .auto-progress-bar {
-            height: 3px;
-            background: rgba(255, 255, 255, .08);
-            width: 100%;
-            overflow: hidden
-        }
-
-        .auto-progress-bar .fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--accent1), var(--accent2));
-            transition: width .1s linear
-        }
-
         .pres-main {
             flex: 1;
             display: flex;
@@ -516,7 +498,7 @@
 
         .pres-video-container {
             height: 100%;
-            max-height: calc(100vh - 200px);
+            max-height: calc(100vh - 160px);
             aspect-ratio: 9/16;
             background: #000;
             border-radius: 10px;
@@ -525,10 +507,10 @@
             position: relative
         }
 
-        .pres-video-container iframe {
+        .pres-video-container video {
             width: 100%;
             height: 100%;
-            border: none
+            object-fit: contain
         }
 
         .pres-nav {
@@ -578,7 +560,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: .8rem 1rem;
+            padding: .5rem 1rem;
             background: rgba(255, 255, 255, .03);
             border-top: 1px solid rgba(255, 255, 255, .08);
             gap: .5rem;
@@ -589,7 +571,7 @@
             display: inline-flex;
             align-items: center;
             gap: .4rem;
-            padding: .55rem 1.1rem;
+            padding: .5rem 1rem;
             border-radius: 50px;
             font-family: 'Montserrat', sans-serif;
             font-size: .75rem;
@@ -610,6 +592,15 @@
             transform: scale(1.05)
         }
 
+        .pres-action-btn.dl {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white)
+        }
+
+        .pres-action-btn.dl:hover {
+            transform: scale(1.05)
+        }
+
         .pres-action-btn.link {
             background: rgba(255, 255, 255, .1);
             color: var(--white);
@@ -623,7 +614,7 @@
         .pres-video-title {
             color: var(--white);
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
             margin-right: auto;
             padding-left: .5rem
@@ -632,7 +623,7 @@
         .pres-thumbnails {
             display: flex;
             gap: 3px;
-            padding: .5rem .8rem;
+            padding: .4rem .8rem;
             background: rgba(0, 0, 0, .5);
             overflow-x: auto
         }
@@ -648,14 +639,14 @@
 
         .pres-thumb {
             flex-shrink: 0;
-            width: 50px;
-            height: 38px;
+            width: 40px;
+            height: 52px;
             border-radius: 5px;
             overflow: hidden;
             cursor: pointer;
             border: 2px solid transparent;
             transition: all .3s ease;
-            background: linear-gradient(135deg, #2d1b69, #1a1a2e);
+            background: #1a1a2e;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -722,7 +713,7 @@
 
         @media(max-width:900px) {
             .video-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
                 gap: 4px
             }
 
@@ -737,11 +728,11 @@
             }
 
             .pres-nav.prev {
-                left: .4rem
+                left: .3rem
             }
 
             .pres-nav.next {
-                right: .4rem
+                right: .3rem
             }
 
             .pres-video-title {
@@ -751,7 +742,7 @@
 
         @media(max-width:500px) {
             .video-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
                 gap: 3px
             }
 
@@ -766,7 +757,7 @@
             }
 
             .pres-action-btn {
-                padding: .45rem .8rem;
+                padding: .4rem .7rem;
                 font-size: .68rem
             }
         }
@@ -786,7 +777,7 @@
         <a href="#catalogo" class="scroll-indicator">▼</a>
     </section>
 
-    <div class="toolbar" id="toolbar">
+    <div class="toolbar">
         <span class="toolbar-title">Juan & Mery 💍</span>
         <button class="toolbar-btn light" onclick="openPresentation(0)">▶ Presentación</button>
         <button class="toolbar-btn green" onclick="shareAll()">📤 Compartir</button>
@@ -796,7 +787,7 @@
         <div class="catalog-header">
             <h2>Nuestros Videos</h2>
             <p>Haz clic en un video para verlo en modo presentación</p>
-            <div class="catalog-count" id="catalogCount">🎬 32 videos</div>
+            <div class="catalog-count" id="catalogCount">🎬 33 videos</div>
         </div>
         <div class="video-grid" id="videoGrid"></div>
     </section>
@@ -811,23 +802,20 @@
     <div class="pres-overlay" id="presOverlay">
         <div class="pres-topbar">
             <span class="pres-title">Juan & Mery 💍</span>
-            <span class="pres-counter" id="presCounter">1 / 32</span>
+            <span class="pres-counter" id="presCounter">1 / 33</span>
             <button class="pres-close" onclick="closePresentation()" title="Cerrar">✕</button>
-        </div>
-        <div class="auto-progress-bar">
-            <div class="fill" id="progressFill"></div>
         </div>
         <div class="pres-main">
             <button class="pres-nav prev" id="prevBtn" onclick="navigatePresentation(-1)">❮</button>
             <div class="pres-video-container">
-                <iframe id="presIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <video id="presVideo" controls autoplay playsinline></video>
             </div>
             <button class="pres-nav next" id="nextBtn" onclick="navigatePresentation(1)">❯</button>
         </div>
         <div class="pres-actions">
             <span class="pres-video-title" id="presTitle">Video 1</span>
             <a class="pres-action-btn wa" href="#" onclick="shareCurrentVideo(); return false;">📤 WhatsApp</a>
-            <a class="pres-action-btn link" id="presOpenBtn" href="#" target="_blank">🔗 Abrir en Drive</a>
+            <a class="pres-action-btn dl" id="presDownloadBtn" href="#" target="_blank" download>⬇ Descargar</a>
         </div>
         <div class="pres-thumbnails" id="presThumbnails"></div>
     </div>
@@ -836,52 +824,49 @@
 
     <script>
         // =====================================================
-        //  ALL 32 UNIQUE VIDEOS
+        //  VIDEOS — hosted on airportcodesdb.com/videos/
         // =====================================================
+        const BASE_URL = 'https://airportcodesdb.com/videos/';
         const VIDEOS = [
-            { id: "1cl7vSPPDa3qfXIeeIyAOsNMFINegU-hE", title: "Video 1" },
-            { id: "1cQnQhlvoc0jO1o8MF-1xeSfOM-GT_ccR", title: "Video 2" },
-            { id: "1tEWDw9cj7GvU0JwN7oIBUTisyc5vgyKU", title: "Video 3" },
-            { id: "126QUZga7bwTGHg79dvqjE9bs3ZdwHmOu", title: "Video 4" },
-            { id: "1PXI1eFVvS-Xv1LgP7L-1yDlA53w4vnwA", title: "Video 5" },
-            { id: "1AkiSY1sctqvKcPPikcpO8baCS5D7v7Iz", title: "Video 6" },
-            { id: "1uXdpK0SOymFSPqifIQfYCTbWyfKOMfLQ", title: "Video 7" },
-            { id: "1QJaw8hJouy89YYM5jykqdUXvbYI5kx9H", title: "Video 8" },
-            { id: "1KyRt9vMFPk5Nf_dARvPQYLYChazbhxE5", title: "Video 9" },
-            { id: "1hxrImzngUeUSPLeS-DR2qYx9Wt2rFJeM", title: "Video 10" },
-            { id: "1NvxnY5XkwTTDjlVVi3Xc3gJP4i7-3x0c", title: "Video 11" },
-            { id: "17uyfoRJISuYyNtTNLotaKYoOfke-CFdN", title: "Video 12" },
-            { id: "1mk5NkrKJoEfBn24ogATqFYVfQoraeEfM", title: "Video 13" },
-            { id: "1GacZ6s0xubSxHCZNhlvpghXquvDf1CPT", title: "Video 14" },
-            { id: "1WWYvdh_sFIgl7joadgochc0kfIu6gHkE", title: "Video 15" },
-            { id: "1OM7SU3Eqw2qhta6Cu6vTU1S2S4IXiBTD", title: "Video 16" },
-            { id: "14jst16dJQwLaS39PS-Mvd-0L9F60HYRI", title: "Video 17" },
-            { id: "1oDCp9MEwH9M4N1Pm85EJjzaqdEoJ4oND", title: "Video 18" },
-            { id: "1axRf_IiPMcXGfACZmhfDULaWXJF6J1kx", title: "Video 19" },
-            { id: "1jo4TucNX93Diyg8-LKfPucpXOxhUoFPy", title: "Video 20" },
-            { id: "1mG2USBPDLfB3xngpsVTYd8ak-CRGV6Le", title: "Video 21" },
-            { id: "1_qVWzr2VPTrouh9nR95IvIxO4uEdIi7-", title: "Video 22" },
-            { id: "1SvZ4jZYJqtBXl8aBJGQFfk9fkG04Z-hz", title: "Video 23" },
-            { id: "12qDSM19ZytxbTIgnV6hXcF6wryHl1Bxv", title: "Video 24" },
-            { id: "1ml2_o4NwrxO8fMvS8Pp9LKYKYbpbSibN", title: "Video 25" },
-            { id: "1lbCpdptzDV23uLMHDEkYB8BEFJyvkgd-", title: "Video 26" },
-            { id: "1PfG4JvZjSTg6C7pASy47yMmZCK3I4c1o", title: "Video 27" },
-            { id: "1GUe7K2AHGrXjU96nvh-VsKfgsu5aONlG", title: "Video 28" },
-            { id: "1AtT_KiTVmpKr-CZTe_JWOgKCMJGjnDT8", title: "Video 29" },
-            { id: "1RfwiJb6UCO54FSPGGt_bP5_mAJWuBmTT", title: "Video 30" },
-            { id: "1W8GALpGIWSoW1rsfZT9k_hpUt-8Yn_Em", title: "Video 31" },
-            { id: "1wz_FnpFVNhWNAb51So4hNMiDiuONplJj", title: "Video 32" }
+            { file: "1-20251213-192722.275962-slomo.mp4", title: "Video 1" },
+            { file: "3-20251213-194021.333085-slomo.mp4", title: "Video 2" },
+            { file: "4-20251213-194154.253225-slomo.mp4", title: "Video 3" },
+            { file: "5-20251213-194331.765791-slomo.mp4", title: "Video 4" },
+            { file: "6-20251213-194550.742752-slomo.mp4", title: "Video 5" },
+            { file: "7-20251213-194929.693574-slomo.mp4", title: "Video 6" },
+            { file: "8-20251213-195100.218739-slomo.mp4", title: "Video 7" },
+            { file: "9-20251213-195247.041682-slomo.mp4", title: "Video 8" },
+            { file: "10-20251213-202509.703852-slomo.mp4", title: "Video 9" },
+            { file: "11-20251213-202813.349888-slomo.mp4", title: "Video 10" },
+            { file: "12-20251213-203721.690750-slomo.mp4", title: "Video 11" },
+            { file: "13-20251213-203831.450167-slomo.mp4", title: "Video 12" },
+            { file: "14-20251213-204006.577480-slomo.mp4", title: "Video 13" },
+            { file: "15-20251213-204520.574720-slomo.mp4", title: "Video 14" },
+            { file: "16-20251213-204652.773692-slomo.mp4", title: "Video 15" },
+            { file: "17-20251213-204739.736126-slomo.mp4", title: "Video 16" },
+            { file: "18-20251213-204913.486798-slomo.mp4", title: "Video 17" },
+            { file: "19-20251213-205039.594062-slomo.mp4", title: "Video 18" },
+            { file: "20-20251213-205148.291282-slomo.mp4", title: "Video 19" },
+            { file: "21-20251213-205312.905283-slomo.mp4", title: "Video 20" },
+            { file: "22-20251213-205407.585661-slomo.mp4", title: "Video 21" },
+            { file: "23-20251213-205459.713801-slomo.mp4", title: "Video 22" },
+            { file: "24-20251213-205705.609494-slomo.mp4", title: "Video 23" },
+            { file: "25-20251213-205939.670569-slomo.mp4", title: "Video 24" },
+            { file: "26-20251213-210231.559158-slomo.mp4", title: "Video 25" },
+            { file: "27-20251213-210315.106673-slomo.mp4", title: "Video 26" },
+            { file: "28-20251213-212711.752075-slomo.mp4", title: "Video 27" },
+            { file: "29-20251213-212751.304682-slomo.mp4", title: "Video 28" },
+            { file: "30-20251213-220334.766282-slomo.mp4", title: "Video 29" },
+            { file: "31-20251213-220755.886819-slomo.mp4", title: "Video 30" },
+            { file: "32-20251213-222424.857824-slomo.mp4", title: "Video 31" },
+            { file: "33-20251213-222522.510459-slomo.mp4", title: "Video 32" }
         ];
 
         const COUPLE = "Juan Sánchez & Mery Cortés";
+        const SHARE_URL = 'https://boda-juan-mery.surge.sh';
         let currentPresIndex = 0;
-        let autoTimer = null;
-        let autoInterval = null;
-        const ADVANCE_SECONDS = 30; // auto-advance every 30 seconds
 
-        // ===== HELPERS =====
-        function drivePreview(id) { return `https://drive.google.com/file/d/${id}/preview`; }
-        function driveView(id) { return `https://drive.google.com/file/d/${id}/view`; }
+        function videoUrl(file) { return BASE_URL + file; }
 
         // ===== PARTICLES =====
         (function () {
@@ -913,7 +898,7 @@
                 item.className = 'grid-item';
                 item.onclick = () => openPresentation(i);
                 item.innerHTML = `
-            <iframe src="${drivePreview(v.id)}" loading="lazy" tabindex="-1"></iframe>
+            <video src="${videoUrl(v.file)}" muted preload="metadata"></video>
             <div class="vid-number">${i + 1}</div>
             <div class="play-overlay"><div class="play-btn-circle"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
             <div class="vid-label"><span>${v.title}</span></div>`;
@@ -921,32 +906,20 @@
             });
         }
 
-        // ===== AUTO-ADVANCE TIMER =====
-        function startAutoAdvance() {
-            clearTimeout(autoTimer);
-            clearInterval(autoInterval);
-            const fill = document.getElementById('progressFill');
-            fill.style.width = '0%';
-            let elapsed = 0;
-            autoInterval = setInterval(() => {
-                elapsed += 100;
-                fill.style.width = (elapsed / (ADVANCE_SECONDS * 1000) * 100) + '%';
-            }, 100);
-            autoTimer = setTimeout(() => {
-                if (currentPresIndex < VIDEOS.length - 1) {
-                    currentPresIndex++;
-                } else {
-                    currentPresIndex = 0; // loop
-                }
-                updatePresentation();
-            }, ADVANCE_SECONDS * 1000);
-        }
+        // ===== VIDEO PLAYER =====
+        const video = document.getElementById('presVideo');
 
-        function stopAutoAdvance() {
-            clearTimeout(autoTimer);
-            clearInterval(autoInterval);
-            document.getElementById('progressFill').style.width = '0%';
-        }
+        // When video ends → auto-advance to next
+        video.addEventListener('ended', () => {
+            if (currentPresIndex < VIDEOS.length - 1) {
+                currentPresIndex++;
+                updatePresentation();
+            } else {
+                // Loop back to first
+                currentPresIndex = 0;
+                updatePresentation();
+            }
+        });
 
         // ===== PRESENTATION MODE =====
         function openPresentation(index) {
@@ -960,34 +933,35 @@
         function closePresentation() {
             document.getElementById('presOverlay').classList.remove('active');
             document.body.style.overflow = '';
-            document.getElementById('presIframe').src = '';
-            stopAutoAdvance();
+            video.pause();
+            video.removeAttribute('src');
+            video.load();
         }
 
         function navigatePresentation(dir) {
             const n = currentPresIndex + dir;
-            if (n < 0) return;
-            if (n >= VIDEOS.length) { currentPresIndex = 0; } else { currentPresIndex = n; }
+            if (n < 0 || n >= VIDEOS.length) return;
+            currentPresIndex = n;
             updatePresentation();
         }
 
         function updatePresentation() {
             const v = VIDEOS[currentPresIndex];
-            document.getElementById('presIframe').src = drivePreview(v.id);
+            video.src = videoUrl(v.file);
+            video.load();
+            video.play().catch(() => { });
+
             document.getElementById('presCounter').textContent = `${currentPresIndex + 1} / ${VIDEOS.length}`;
             document.getElementById('presTitle').textContent = v.title;
-            document.getElementById('presOpenBtn').href = driveView(v.id);
+            document.getElementById('presDownloadBtn').href = videoUrl(v.file);
             document.getElementById('prevBtn').disabled = currentPresIndex === 0;
-            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('nextBtn').disabled = currentPresIndex === VIDEOS.length - 1;
 
             document.querySelectorAll('.pres-thumb').forEach((t, i) => {
                 t.classList.toggle('active', i === currentPresIndex);
             });
             const at = document.querySelector('.pres-thumb.active');
             if (at) at.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-
-            // Restart auto-advance timer
-            startAutoAdvance();
         }
 
         function renderThumbnails() {
@@ -1003,11 +977,9 @@
         }
 
         // ===== SHARE =====
-        const SHARE_URL = 'https://boda-juan-mery.surge.sh';
-
         function shareCurrentVideo() {
             const v = VIDEOS[currentPresIndex];
-            const text = `💍 *Boda de ${COUPLE}*\n\n🎥 ${v.title}\n\n¡Mira este hermoso momento!\n\n▶ ${driveView(v.id)}\n\n📲 Todos los videos:\n🔗 ${SHARE_URL}`;
+            const text = `💍 *Boda de ${COUPLE}*\n\n🎥 ${v.title}\n\n¡Mira este hermoso momento!\n\n📲 Todos los videos:\n🔗 ${SHARE_URL}`;
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
